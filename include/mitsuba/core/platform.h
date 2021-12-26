@@ -176,6 +176,10 @@
 
 MTS_NAMESPACE_BEGIN
 
+#if !defined(SINGLE_PRECISION) && !defined(DOUBLE_PRECISION)
+#define SINGLE_PRECISION
+#endif
+
 #if defined(DOUBLE_PRECISION)
 typedef double Float;
 #elif defined(SINGLE_PRECISION)
