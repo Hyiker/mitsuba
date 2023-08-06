@@ -2,7 +2,7 @@
    here so that Mitsuba can optionally be compiled without OpenEXR support. */
 
 #if defined(MTS_HAS_OPENEXR)
-#include <half.h>
+#include <OpenEXR/half.h>
 #else
 ///////////////////////////////////////////////////////////////////////////
 //

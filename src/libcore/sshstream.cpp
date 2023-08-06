@@ -112,7 +112,7 @@ SSHStream::SSHStream(const std::string &userName, const std::string &hostName,
     for (size_t i = 0; i < cmdLine.size(); ++i)
         params = params + " " + cmdLine[i];
 
-    if (!CreateProcess((LPCWSTR) "plink.exe", (LPWSTR)params.c_str(), NULL,
+    if (!CreateProcess("plink.exe", (char*)params.c_str(), NULL,
                        NULL,  // Process & thread security attributes
                        TRUE,  // Inherit handles
                        CREATE_NEW_PROCESS_GROUP,  // Ignore Ctrl-C

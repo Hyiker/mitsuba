@@ -22,36 +22,37 @@
 #include <OpenGL/gl.h>
 #else
 #if defined(_WIN32)
-# include <windows.h>
+#include <windows.h>
 #endif
 #include <GL/gl.h>
 #endif
 
-#define REPEATED_KEYMASK (1<<30)
+#define REPEATED_KEYMASK (1 << 30)
 #define DEFINE_SPECIAL(wsym, sym) m_special[wsym] = sym
 
 #if !defined(WGL_SAMPLE_BUFFERS_ARB)
-#define WGL_SAMPLE_BUFFERS_ARB  0x2041
-#define WGL_SAMPLES_ARB     0x2042
+#define WGL_SAMPLE_BUFFERS_ARB 0x2041
+#define WGL_SAMPLES_ARB 0x2042
 #endif
 
 #ifndef WGL_ARB_pixel_format
 #define WGL_ARB_pixel_format 1
-#define WGL_DRAW_TO_WINDOW_ARB                                  0x2001
-#define WGL_ACCELERATION_ARB                                    0x2003
-#define WGL_SUPPORT_OPENGL_ARB                                  0x2010
-#define WGL_COLOR_BITS_ARB                                      0x2014
-#define WGL_RED_BITS_ARB                                        0x2015
-#define WGL_GREEN_BITS_ARB                                      0x2017
-#define WGL_BLUE_BITS_ARB                                       0x2019
-#define WGL_ALPHA_BITS_ARB                                      0x201B
-#define WGL_DEPTH_BITS_ARB                                      0x2022
-#define WGL_STENCIL_BITS_ARB                                    0x2023
-#define WGL_DOUBLE_BUFFER_ARB                                   0x2011
-#define WGL_FULL_ACCELERATION_ARB                               0x2027
+#define WGL_DRAW_TO_WINDOW_ARB 0x2001
+#define WGL_ACCELERATION_ARB 0x2003
+#define WGL_SUPPORT_OPENGL_ARB 0x2010
+#define WGL_COLOR_BITS_ARB 0x2014
+#define WGL_RED_BITS_ARB 0x2015
+#define WGL_GREEN_BITS_ARB 0x2017
+#define WGL_BLUE_BITS_ARB 0x2019
+#define WGL_ALPHA_BITS_ARB 0x201B
+#define WGL_DEPTH_BITS_ARB 0x2022
+#define WGL_STENCIL_BITS_ARB 0x2023
+#define WGL_DOUBLE_BUFFER_ARB 0x2011
+#define WGL_FULL_ACCELERATION_ARB 0x2027
 
-typedef BOOL (APIENTRY * wglChoosePixelFormatARBProc) (HDC hdc, const int *piAttribIList,
-        const FLOAT *pfAttribFList, UINT nMaxFormats, int *piFormats, UINT *nNumFormats);
+typedef BOOL(APIENTRY *wglChoosePixelFormatARBProc)(
+    HDC hdc, const int *piAttribIList, const FLOAT *pfAttribFList,
+    UINT nMaxFormats, int *piFormats, UINT *nNumFormats);
 #endif
 
 MTS_NAMESPACE_BEGIN
@@ -62,13 +63,14 @@ MTS_NAMESPACE_BEGIN
  */
 static WGLDevice *__global_workaround = NULL;
 
-LONG WINAPI WGLDevice::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+LONG WINAPI WGLDevice::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam,
+                               LPARAM lParam) {
     LRESULT retval = 1;
 
     /* See comment above */
-    WGLDevice *device = reinterpret_cast<WGLDevice *>(GetWindowLongPtr(hWnd, 0));
-    if (device == NULL)
-        device = __global_workaround;
+    WGLDevice *device =
+        reinterpret_cast<WGLDevice *>(GetWindowLongPtr(hWnd, 0));
+    if (device == NULL) device = __global_workaround;
     PAINTSTRUCT ps;
 
     DeviceEvent deviceEvent;
@@ -77,18 +79,16 @@ LONG WINAPI WGLDevice::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
             device->initPixelFormat(hWnd);
             break;
         case WM_SIZE: {
-                Vector2i size = Vector2i(LOWORD(lParam), HIWORD(lParam));
-                if (device->m_size != size) {
-                    device->m_size = size;
-                    deviceEvent.setType(EResizeEvent);
-                    device->fireDeviceEvent(deviceEvent);
-                }
+            Vector2i size = Vector2i(LOWORD(lParam), HIWORD(lParam));
+            if (device->m_size != size) {
+                device->m_size = size;
+                deviceEvent.setType(EResizeEvent);
+                device->fireDeviceEvent(deviceEvent);
             }
-            break;
+        } break;
         case WM_PAINT:
             BeginPaint(hWnd, &ps);
-            if (device->getDoubleBuffer())
-                SwapBuffers(device->m_hdc);
+            if (device->getDoubleBuffer()) SwapBuffers(device->m_hdc);
             EndPaint(hWnd, &ps);
             break;
         case WM_CLOSE:
@@ -118,11 +118,14 @@ LONG WINAPI WGLDevice::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
                 int special = deviceEvent.getKeyboardSpecial();
 
                 if (special == EKeyLShift || special == EKeyRShift) {
-                    device->m_modifierState = device->m_modifierState & (~EShiftModifier);
+                    device->m_modifierState =
+                        device->m_modifierState & (~EShiftModifier);
                 } else if (special == EKeyLAlt || special == EKeyRAlt) {
-                    device->m_modifierState = device->m_modifierState & (~EAltModifier);
+                    device->m_modifierState =
+                        device->m_modifierState & (~EAltModifier);
                 } else if (special == EKeyLControl || special == EKeyRControl) {
-                    device->m_modifierState = device->m_modifierState & (~EControlModifier);
+                    device->m_modifierState =
+                        device->m_modifierState & (~EControlModifier);
                 }
 
                 deviceEvent.setKeyboardModifiers(device->m_modifierState);
@@ -131,8 +134,7 @@ LONG WINAPI WGLDevice::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
             break;
         case WM_SYSKEYDOWN:
         case WM_KEYDOWN:
-            if (lParam & REPEATED_KEYMASK)
-                break;
+            if (lParam & REPEATED_KEYMASK) break;
             deviceEvent.setType(EKeyDownEvent);
             if (device->translateKey(wParam, lParam, deviceEvent)) {
                 int special = deviceEvent.getKeyboardSpecial();
@@ -167,16 +169,19 @@ LONG WINAPI WGLDevice::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
                     Log(EError, "Cannot track mouse leave events!");
                 }
             }
-            deviceEvent.setMousePosition(Point2i(LOWORD(lParam), HIWORD(lParam)));
+            deviceEvent.setMousePosition(
+                Point2i(LOWORD(lParam), HIWORD(lParam)));
             if (device->translateMouse(uMsg, wParam, deviceEvent)) {
                 if (deviceEvent.getType() == EMouseButtonDownEvent) {
-                    if (deviceEvent.getMouseButton() != Device::EWheelUpButton
-                        && deviceEvent.getMouseButton() != Device::EWheelDownButton)
+                    if (deviceEvent.getMouseButton() !=
+                            Device::EWheelUpButton &&
+                        deviceEvent.getMouseButton() !=
+                            Device::EWheelDownButton)
                         device->m_buttonState |= deviceEvent.getMouseButton();
                 } else if (deviceEvent.getType() == EMouseButtonUpEvent) {
                     device->m_buttonState &= ~deviceEvent.getMouseButton();
-                } else if (deviceEvent.getType() == EMouseMotionEvent
-                        && device->m_buttonState != 0) {
+                } else if (deviceEvent.getType() == EMouseMotionEvent &&
+                           device->m_buttonState != 0) {
                     deviceEvent.setMouseButton(device->m_buttonState);
                     deviceEvent.setType(EMouseDragEvent);
                 }
@@ -189,21 +194,20 @@ LONG WINAPI WGLDevice::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPara
             break;
     };
 
-    return (LONG) retval;
+    return (LONG)retval;
 }
 
-
 WGLDevice::WGLDevice(WGLSession *session)
- : Device(session),
- m_hwnd(NULL),
- m_hdc(NULL),
- m_leftShift(false),
- m_rightShift(false),
- m_mouseInWindow(false) {
+    : Device(session),
+      m_hwnd(NULL),
+      m_hdc(NULL),
+      m_leftShift(false),
+      m_rightShift(false),
+      m_mouseInWindow(false) {
     m_title = "Mitsuba [wgl]";
 
     char c;
-    for (int i=0; i<256; i++) {
+    for (int i = 0; i < 256; i++) {
         m_special[i] = ENoSpecial;
         m_std[i] = '\0';
     }
@@ -262,18 +266,14 @@ WGLDevice::WGLDevice(WGLSession *session)
     DEFINE_SPECIAL(VK_LCONTROL, EKeyLControl);
     DEFINE_SPECIAL(VK_RCONTROL, EKeyRControl);
 
-    for (c='0'; c<='9'; c++)
-        m_std[(unsigned char) c] = c;
+    for (c = '0'; c <= '9'; c++) m_std[(unsigned char)c] = c;
 
-    for (c='A'; c<='Z'; c++)
-        m_std[(unsigned char) c] = c;
+    for (c = 'A'; c <= 'Z'; c++) m_std[(unsigned char)c] = c;
 }
 
 WGLDevice::~WGLDevice() {
-    if (m_initialized)
-        shutdown();
+    if (m_initialized) shutdown();
 }
-
 
 void WGLDevice::init(Device *other) {
     Device::init(other);
@@ -285,32 +285,27 @@ void WGLDevice::init(Device *other) {
 
     __global_workaround = this;
     m_pf = -1;
-    for (int i=0; i<2; i++) {
+    for (int i = 0; i < 2; i++) {
         /* Do this twice, the first pass creates a dummy device &
            rendering context in order to get hold of a proper pixel format
            (windows is soo bugged!), the second pass creates the actual
            window with the matching pixel format
         */
         int extra = 0;
-        if (m_resizeAllowed)
-            extra = WS_SIZEBOX | WS_MAXIMIZEBOX;
+        if (m_resizeAllowed) extra = WS_SIZEBOX | WS_MAXIMIZEBOX;
 
         m_hwnd = CreateWindow(
-            session->m_wndClassName.c_str(),
-            m_title.c_str(),
-            m_fullscreen ? WS_POPUP : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | extra),
-            CW_USEDEFAULT,
-            CW_USEDEFAULT,
-            getSize().x, getSize().y,
-            NULL, NULL,
-            session->m_hinstance,
-            NULL);
+            session->m_wndClassName.c_str(), m_title.c_str(),
+            m_fullscreen ? WS_POPUP
+                         : (WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU |
+                            WS_MINIMIZEBOX | extra),
+            CW_USEDEFAULT, CW_USEDEFAULT, getSize().x, getSize().y, NULL, NULL,
+            session->m_hinstance, NULL);
     }
     __global_workaround = NULL;
 
-    if (!m_hwnd)
-        Log(EError, "Unable to create the window");
-    SetWindowLongPtr(m_hwnd, 0, (LONG_PTR) this);
+    if (!m_hwnd) Log(EError, "Unable to create the window");
+    SetWindowLongPtr(m_hwnd, 0, (LONG_PTR)this);
     ShowWindow(m_hwnd, SW_HIDE);
 
     /* Switch to fullscreen */
@@ -324,7 +319,8 @@ void WGLDevice::init(Device *other) {
         dm.dmPelsHeight = m_size.y;
 
         dm.dmFields = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL;
-        if (!ChangeDisplaySettings(&dm, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL)
+        if (!ChangeDisplaySettings(&dm, CDS_FULLSCREEN) ==
+            DISP_CHANGE_SUCCESSFUL)
             Log(EError, "Could not switch to fullscreen!");
     }
 
@@ -333,7 +329,8 @@ void WGLDevice::init(Device *other) {
         m_position.y = (GetSystemMetrics(SM_CYSCREEN) - m_size.y) / 2;
     }
 
-    SetWindowPos(m_hwnd, HWND_TOP, m_position.x, m_position.y, m_size.x, m_size.y, SWP_NOCOPYBITS);
+    SetWindowPos(m_hwnd, HWND_TOP, m_position.x, m_position.y, m_size.x,
+                 m_size.y, SWP_NOCOPYBITS);
     UpdateWindow(m_hwnd);
 
     m_mouse = Point2i(-1, -1);
@@ -366,7 +363,8 @@ void WGLDevice::setTitle(const std::string &title) {
 bool WGLDevice::translateKey(WPARAM wParam, LPARAM lParam, DeviceEvent &event) {
     BYTE allKeys[256];
     GetKeyboardState(allKeys);
-    LRESULT ret = ToAscii((UINT) wParam, (UINT) ((lParam >> 16) & 0x00FF), allKeys, (WORD *) event.getKeyboardInterpreted(), 0);
+    LRESULT ret = ToAscii((UINT)wParam, (UINT)((lParam >> 16) & 0x00FF),
+                          allKeys, (WORD *)event.getKeyboardInterpreted(), 0);
     event.getKeyboardInterpreted()[ret] = '\0';
     event.setKeyboardSpecial(ENoSpecial);
     event.setKeyboardKey('\0');
@@ -378,56 +376,57 @@ bool WGLDevice::translateKey(WPARAM wParam, LPARAM lParam, DeviceEvent &event) {
 
     switch (wParam) {
         case VK_RETURN: {
-                /* Determine which return key it was */
-                if (lParam & 0x01000000)
-                    event.setKeyboardSpecial(EKeyKeyPadEnter);
-                else
-                    event.setKeyboardSpecial(EKeyReturn);
-            }
-            break;
+            /* Determine which return key it was */
+            if (lParam & 0x01000000)
+                event.setKeyboardSpecial(EKeyKeyPadEnter);
+            else
+                event.setKeyboardSpecial(EKeyReturn);
+        } break;
         case VK_SHIFT: {
-                /* Determine which shift key it was */
-                bool lshift = (GetKeyState(VK_LSHIFT) & 0x8000) != 0;
-                bool rshift = (GetKeyState(VK_RSHIFT) & 0x8000) != 0;
+            /* Determine which shift key it was */
+            bool lshift = (GetKeyState(VK_LSHIFT) & 0x8000) != 0;
+            bool rshift = (GetKeyState(VK_RSHIFT) & 0x8000) != 0;
 
-                if (m_leftShift != lshift) {
-                    m_leftShift = lshift;
-                    event.setKeyboardSpecial(EKeyLShift);
-                } else if (m_rightShift != rshift) {
-                    m_rightShift = rshift;
-                    event.setKeyboardSpecial(EKeyRShift);
-                }
+            if (m_leftShift != lshift) {
+                m_leftShift = lshift;
+                event.setKeyboardSpecial(EKeyLShift);
+            } else if (m_rightShift != rshift) {
+                m_rightShift = rshift;
+                event.setKeyboardSpecial(EKeyRShift);
             }
-            break;
+        } break;
         case VK_CONTROL: {
-                if (lParam & 0x01000000)
-                    event.setKeyboardSpecial(EKeyRControl);
-                else
-                    event.setKeyboardSpecial(EKeyLControl);
+            if (lParam & 0x01000000)
+                event.setKeyboardSpecial(EKeyRControl);
+            else
+                event.setKeyboardSpecial(EKeyLControl);
 
-                /* Filter out Alt-Gr key presses */
-                DWORD msg_time = GetMessageTime();
-                MSG next_msg;
-                if (PeekMessage(&next_msg, NULL, 0, 0, PM_NOREMOVE)) {
-                    if (next_msg.message == WM_KEYDOWN || next_msg.message == WM_SYSKEYDOWN
-                        || next_msg.message == WM_KEYUP || next_msg.message == WM_SYSKEYUP) {
-                        if (next_msg.wParam == VK_MENU && (next_msg.lParam & 0x01000000)
-                            && next_msg.time == msg_time) {
-                            event.setKeyboardSpecial(ENoSpecial);
-                        }
+            /* Filter out Alt-Gr key presses */
+            DWORD msg_time = GetMessageTime();
+            MSG next_msg;
+            if (PeekMessage(&next_msg, NULL, 0, 0, PM_NOREMOVE)) {
+                if (next_msg.message == WM_KEYDOWN ||
+                    next_msg.message == WM_SYSKEYDOWN ||
+                    next_msg.message == WM_KEYUP ||
+                    next_msg.message == WM_SYSKEYUP) {
+                    if (next_msg.wParam == VK_MENU &&
+                        (next_msg.lParam & 0x01000000) &&
+                        next_msg.time == msg_time) {
+                        event.setKeyboardSpecial(ENoSpecial);
                     }
                 }
             }
-            break;
+        } break;
         case VK_MENU:
-                if (lParam & 0x01000000)
-                    event.setKeyboardSpecial(EKeyRAlt);
-                else
-                    event.setKeyboardSpecial(EKeyLAlt);
+            if (lParam & 0x01000000)
+                event.setKeyboardSpecial(EKeyRAlt);
+            else
+                event.setKeyboardSpecial(EKeyLAlt);
             break;
     }
 
-    if (event.getKeyboardSpecial() != ENoSpecial || event.getKeyboardKey() != '\0') {
+    if (event.getKeyboardSpecial() != ENoSpecial ||
+        event.getKeyboardKey() != '\0') {
         return true;
     } else if (ret == 1) {
         event.setKeyboardKey(event.getKeyboardInterpreted()[0]);
@@ -435,7 +434,6 @@ bool WGLDevice::translateKey(WPARAM wParam, LPARAM lParam, DeviceEvent &event) {
     }
     return false;
 }
-
 
 bool WGLDevice::translateMouse(UINT uMsg, WPARAM wParam, DeviceEvent &event) {
     if (uMsg == WM_MOUSEWHEEL) {
@@ -454,9 +452,7 @@ bool WGLDevice::translateMouse(UINT uMsg, WPARAM wParam, DeviceEvent &event) {
         case WM_MOUSEMOVE:
             event.setType(EMouseMotionEvent);
             event.setMouseButton(ENoButton);
-            if (m_grab)
-                warpMouse(Point2i(getSize().x / 2,
-                    getSize().y/2));
+            if (m_grab) warpMouse(Point2i(getSize().x / 2, getSize().y / 2));
             break;
         case WM_LBUTTONDOWN:
             event.setType(EMouseButtonDownEvent);
@@ -483,17 +479,16 @@ bool WGLDevice::translateMouse(UINT uMsg, WPARAM wParam, DeviceEvent &event) {
             event.setMouseButton(ERightButton);
             break;
         case WM_MOUSEWHEEL: {
-                int move = (short) HIWORD(wParam);
-                event.setType(EMouseButtonDownEvent);
+            int move = (short)HIWORD(wParam);
+            event.setType(EMouseButtonDownEvent);
 
-                if (move > 0)
-                    event.setMouseButton(EWheelUpButton);
-                else if (move < 0)
-                    event.setMouseButton(EWheelDownButton);
-                else
-                    return false;
-            }
-            break;
+            if (move > 0)
+                event.setMouseButton(EWheelUpButton);
+            else if (move < 0)
+                event.setMouseButton(EWheelDownButton);
+            else
+                return false;
+        } break;
         default:
             return false;
     }
@@ -504,15 +499,15 @@ bool WGLDevice::translateMouse(UINT uMsg, WPARAM wParam, DeviceEvent &event) {
 void WGLDevice::initPixelFormat(HWND hWnd) {
     m_hdc = GetDC(hWnd);
 
-    if (m_hdc == 0)
-        Log(EError, "Could not acquire a device context!");
+    if (m_hdc == 0) Log(EError, "Could not acquire a device context!");
 
     if (m_parent && m_pf == -1) {
         m_pf = GetPixelFormat(m_parent->m_hdc);
         if (m_pf == 0)
             Log(EError, "GetPixelFormat() failed: %s", lastErrorText().c_str());
         if (!DescribePixelFormat(m_parent->m_hdc, m_pf, sizeof(m_pfd), &m_pfd))
-            Log(EError, "DescribePixelFormat() failed: %s", lastErrorText().c_str());
+            Log(EError, "DescribePixelFormat() failed: %s",
+                lastErrorText().c_str());
     }
 
     if (m_pf != -1) {
@@ -526,8 +521,7 @@ void WGLDevice::initPixelFormat(HWND hWnd) {
     m_pfd.nSize = sizeof(m_pfd);
     m_pfd.nVersion = 1;
     m_pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL;
-    if (m_doubleBuffer)
-        m_pfd.dwFlags |= PFD_DOUBLEBUFFER;
+    if (m_doubleBuffer) m_pfd.dwFlags |= PFD_DOUBLEBUFFER;
     m_pfd.iPixelType = PFD_TYPE_RGBA;
     m_pfd.cColorBits = GetDeviceCaps(m_hdc, BITSPIXEL);
     m_pfd.cBlueBits = m_blueBits;
@@ -538,52 +532,66 @@ void WGLDevice::initPixelFormat(HWND hWnd) {
     m_pfd.cStencilBits = m_stencilBits;
 
     m_pf = ChoosePixelFormat(m_hdc, &m_pfd);
-    if (!m_pf)
-        Log(EError, "Could not find a matching pixel format");
+    if (!m_pf) Log(EError, "Could not find a matching pixel format");
 
     if (!SetPixelFormat(m_hdc, m_pf, &m_pfd))
         Log(EError, "Could not set the pixel format");
 
     HGLRC context = wglCreateContext(m_hdc);
-    if (context == 0)
-        Log(EError, "Could not create a temporary WGL context");
+    if (context == 0) Log(EError, "Could not create a temporary WGL context");
 
-    if (!wglMakeCurrent(m_hdc, context))
-        Log(EError, "wglMakeCurrent failed!");
+    if (!wglMakeCurrent(m_hdc, context)) Log(EError, "wglMakeCurrent failed!");
 
     wglChoosePixelFormatARBProc wglChoosePixelFormatARB =
-        (wglChoosePixelFormatARBProc) wglGetProcAddress("wglChoosePixelFormatARB");
+        (wglChoosePixelFormatARBProc)wglGetProcAddress(
+            "wglChoosePixelFormatARB");
 
     if (wglChoosePixelFormatARB == NULL)
-        Log(EError, "Could not get a function pointer to wglChoosePixelFormatARB!");
+        Log(EError,
+            "Could not get a function pointer to wglChoosePixelFormatARB!");
 
     /* Delete the rendering context */
     wglDeleteContext(context);
 
-    int count=0, attribs[32];
+    int count = 0, attribs[32];
     UINT numFormats;
 
     /* Lookup the actual pixel format */
-    attribs[count++] = WGL_DRAW_TO_WINDOW_ARB; attribs[count++] = GL_TRUE;
-    attribs[count++] = WGL_SUPPORT_OPENGL_ARB; attribs[count++] = GL_TRUE;
-    attribs[count++] = WGL_ACCELERATION_ARB; attribs[count++] = WGL_FULL_ACCELERATION_ARB;
-    attribs[count++] = WGL_COLOR_BITS_ARB; attribs[count++] = GetDeviceCaps(m_hdc, BITSPIXEL);
-    attribs[count++] = WGL_RED_BITS_ARB; attribs[count++] = m_redBits;
-    attribs[count++] = WGL_BLUE_BITS_ARB; attribs[count++] = m_blueBits;
-    attribs[count++] = WGL_GREEN_BITS_ARB; attribs[count++] = m_greenBits;
-    attribs[count++] = WGL_ALPHA_BITS_ARB; attribs[count++] = m_alphaBits;
-    attribs[count++] = WGL_DEPTH_BITS_ARB; attribs[count++] = m_depthBits;
-    attribs[count++] = WGL_STENCIL_BITS_ARB; attribs[count++] = m_stencilBits;
-    attribs[count++] = WGL_DOUBLE_BUFFER_ARB; attribs[count++] = m_doubleBuffer ? GL_TRUE : GL_FALSE;
+    attribs[count++] = WGL_DRAW_TO_WINDOW_ARB;
+    attribs[count++] = GL_TRUE;
+    attribs[count++] = WGL_SUPPORT_OPENGL_ARB;
+    attribs[count++] = GL_TRUE;
+    attribs[count++] = WGL_ACCELERATION_ARB;
+    attribs[count++] = WGL_FULL_ACCELERATION_ARB;
+    attribs[count++] = WGL_COLOR_BITS_ARB;
+    attribs[count++] = GetDeviceCaps(m_hdc, BITSPIXEL);
+    attribs[count++] = WGL_RED_BITS_ARB;
+    attribs[count++] = m_redBits;
+    attribs[count++] = WGL_BLUE_BITS_ARB;
+    attribs[count++] = m_blueBits;
+    attribs[count++] = WGL_GREEN_BITS_ARB;
+    attribs[count++] = m_greenBits;
+    attribs[count++] = WGL_ALPHA_BITS_ARB;
+    attribs[count++] = m_alphaBits;
+    attribs[count++] = WGL_DEPTH_BITS_ARB;
+    attribs[count++] = m_depthBits;
+    attribs[count++] = WGL_STENCIL_BITS_ARB;
+    attribs[count++] = m_stencilBits;
+    attribs[count++] = WGL_DOUBLE_BUFFER_ARB;
+    attribs[count++] = m_doubleBuffer ? GL_TRUE : GL_FALSE;
 
     if (m_fsaa > 1) {
-        attribs[count++] = WGL_SAMPLE_BUFFERS_ARB; attribs[count++] = GL_TRUE;
-        attribs[count++] = WGL_SAMPLES_ARB; attribs[count++] = m_fsaa;
+        attribs[count++] = WGL_SAMPLE_BUFFERS_ARB;
+        attribs[count++] = GL_TRUE;
+        attribs[count++] = WGL_SAMPLES_ARB;
+        attribs[count++] = m_fsaa;
     }
-    attribs[count++] = 0; attribs[count++] = 0;
+    attribs[count++] = 0;
+    attribs[count++] = 0;
 
-    float fAttributes[] = {0,0};
-    bool valid = wglChoosePixelFormatARB(m_hdc,attribs,fAttributes,1,&m_pf,&numFormats);
+    float fAttributes[] = {0, 0};
+    bool valid = wglChoosePixelFormatARB(m_hdc, attribs, fAttributes, 1, &m_pf,
+                                         &numFormats);
 
     if (!(valid && numFormats >= 1))
         Log(EError, "Could not find a matching pixel format!");
@@ -609,16 +617,14 @@ void WGLDevice::flip() {
 
     glFinish();
 
-    if (m_doubleBuffer)
-        SwapBuffers(m_hdc);
+    if (m_doubleBuffer) SwapBuffers(m_hdc);
 }
 
 void WGLDevice::setPosition(const Point2i &position) {
     Assert(m_initialized);
 
-    SetWindowPos(m_hwnd, HWND_TOP,
-        getPosition().x, getPosition().y,
-        0, 0, SWP_NOSIZE | SWP_NOZORDER);
+    SetWindowPos(m_hwnd, HWND_TOP, getPosition().x, getPosition().y, 0, 0,
+                 SWP_NOSIZE | SWP_NOZORDER);
 }
 
 void WGLDevice::makeCurrent(Renderer *pRenderer) {
@@ -630,8 +636,7 @@ void WGLDevice::makeCurrent(Renderer *pRenderer) {
 
 void WGLDevice::showCursor(bool pShowCursor) {
     Assert(m_initialized);
-    if (m_cursor != pShowCursor)
-        ::ShowCursor(pShowCursor);
+    if (m_cursor != pShowCursor) ::ShowCursor(pShowCursor);
     m_cursor = pShowCursor;
 }
 
@@ -639,7 +644,7 @@ void WGLDevice::warpMouse(const Point2i &position) {
     Assert(m_initialized);
 
     POINT pt;
-    MSG  msg;
+    MSG msg;
     pt.x = position.x;
     pt.y = position.y;
     m_mouse = position;

@@ -44,7 +44,7 @@ struct MemoryMappedFile::MemoryMappedFilePrivate {
                 filename.string().c_str());
         if (close(fd) != 0) Log(EError, "close(): unable to close file!");
 #elif defined(__WINDOWS__)
-        file = CreateFile((LPCWSTR)filename.string().c_str(),
+        file = CreateFile(filename.string().c_str(),
                           GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ, NULL,
                           CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
         if (file == INVALID_HANDLE_VALUE)
@@ -142,7 +142,7 @@ struct MemoryMappedFile::MemoryMappedFilePrivate {
                 filename.string().c_str());
         if (close(fd) != 0) Log(EError, "close(): unable to close file!");
 #elif defined(__WINDOWS__)
-        file = CreateFile((LPCWSTR)filename.string().c_str(),
+        file = CreateFile(filename.string().c_str(),
                           GENERIC_READ | (readOnly ? 0 : GENERIC_WRITE),
                           FILE_SHARE_WRITE | FILE_SHARE_READ, NULL,
                           OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
