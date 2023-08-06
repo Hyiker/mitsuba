@@ -3,8 +3,12 @@ add_rules("mode.debug", "mode.release")
 includes("src/libcore")
 includes("src/librender")
 -- includes("src/libhw")
--- includes("src/libbidir")
+includes("src/libbidir")
 -- includes("src/libpython")
+
+-- build the applications
+-- Build the command-line binaries
+includes("src/mitsuba")
 
 package("xerces-c_custom")
     set_base("xerces-c")
@@ -35,6 +39,8 @@ function set_common()
         add_defines("WIN32", "WIN64", "_CONSOLE", "OPENEXR_DLL")
         add_syslinks("msvcrt", "ws2_32")
         add_shflags("/nologo", "/SUBSYSTEM:CONSOLE", "/MACHINE:X64", "/FIXED:NO", "/OPT:REF", "/OPT:ICF", "/LTCG", "/NODEFAULTLIB:library", "/MANIFEST")
+        winstubs = "$(projectdir)/data/windows/wmain_stub.cpp"
+        resources = "$(projectdir)/data/windows/mitsuba_res.rc"
     end
 end
 
