@@ -10,40 +10,12 @@ includes("src/libbidir")
 -- Build the command-line binaries
 includes("src/mitsuba")
 
--- Utilities
-includes("src/utils")
--- Surface scattering models
-includes("src/bsdfs")
--- -- Phase functions
-includes("src/phase")
--- -- Intersection shapes
-includes("src/shapes")
--- -- Sample generators
-includes("src/samplers")
--- -- Reconstruction filters
-includes("src/rfilters")
--- -- Film implementations
-includes("src/films")
--- -- Sensors
-includes("src/sensors")
--- -- Emitters
-includes("src/emitters")
--- -- Participating media
-includes("src/medium")
--- -- Volumetric data sources
-includes("src/volume")
--- -- Sub-surface integrators
-includes("src/subsurface")
--- -- Texture types
-includes("src/textures")
--- -- Integrators
-includes("src/integrators")
--- -- Testcases
-includes("src/tests")
+includes("src")
 
 package("xerces-c_custom")
     set_base("xerces-c")
-    add_urls("https://github.com/apache/xerces-c.git")
+    -- add_urls("https://github.com/apache/xerces-c.git")
+    add_links("xerces-c_3")
 package_end()
 
 
@@ -72,7 +44,8 @@ function set_common()
         add_cxxflags("/execution-charset:utf-8", "/source-charset:utf-8", "/openmp")
         add_defines("WIN32", "WIN64", "_CONSOLE", "OPENEXR_DLL")
         add_syslinks("msvcrt", "ws2_32")
-        add_shflags("/nologo", "/SUBSYSTEM:CONSOLE", "/MACHINE:X64", "/FIXED:NO", "/OPT:REF", "/OPT:ICF", "/LTCG", "/NODEFAULTLIB:library", "/MANIFEST")
+        add_shflags("/nologo", "/SUBSYSTEM:CONSOLE", "/MACHINE:X64",
+         "/FIXED:NO", "/OPT:REF", "/OPT:ICF", "/LTCG", "/NODEFAULTLIB:library", "/MANIFEST")
         winstubs = "$(projectdir)/data/windows/wmain_stub.cpp"
         resources = "$(projectdir)/data/windows/mitsuba_res.rc"
     end
@@ -80,15 +53,17 @@ end
 
 -- dependencies
 function set_dependencies()
-    add_requires("zlib v1.2.13", "libjpeg-turbo 2.1.4", "libpng v1.6.40", "xerces-c_custom 5052c90b067dcc347d58822b450897d16e2c31e5")
+    add_requires("zlib v1.2.13", "libjpeg-turbo 2.1.4", "libpng v1.6.40")
     add_requires("glew 2.2.0", "eigen 3.3.9", "fftw 3.3.10")
 
     add_requires("boost 1.81.0", {configs = {shared = true, thread = true, python = true, system = true, filesystem = true}})
     add_requires("freeglut v3.4.0", {configs = {shared = true}})
     add_requires("openexr 2.5.7", {configs = {build_both = true}})
+    add_requires("xerces-c_custom 3.2.4", {configs = {shared = true}})
 
     add_packages("zlib", "openexr", "libjpeg-turbo", "libpng", "boost", "xerces-c_custom", "glew", "eigen", "fftw")
 end
+
 
 set_common()
 set_dependencies()

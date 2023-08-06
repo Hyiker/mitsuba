@@ -424,7 +424,7 @@ void FileStream::staticInitialization() {
     std::locale global_loc = std::locale();
     __facet = new boost::filesystem::detail::utf8_codecvt_facet();
     std::locale locale(global_loc, __facet);
-    boost::filesystem::path::imbue(locale);
+    // boost::filesystem::path::imbue(locale);
 #endif
 }
 

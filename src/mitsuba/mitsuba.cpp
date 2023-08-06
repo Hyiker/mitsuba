@@ -422,7 +422,7 @@ int mitsuba_app(int argc, char **argv) {
         parser->setValidationSchemaFullChecking(true);
         parser->setValidationScheme(SAXParser::Val_Always);
         parser->setExternalNoNamespaceSchemaLocation(
-            (const char *const)schemaPath.c_str());
+            schemaPath.string().c_str());
 
         /* Set the handler */
         SceneHandler *handler = new SceneHandler(parameters);
@@ -449,7 +449,7 @@ int mitsuba_app(int argc, char **argv) {
 
             SLog(EInfo, "Parsing scene description from \"%s\" ..", argv[i]);
 
-            parser->parse((const char *const)filename.c_str());
+            parser->parse(filename.string().c_str());
             ref<Scene> scene = handler->getScene();
 
             scene->setSourceFile(filename);
