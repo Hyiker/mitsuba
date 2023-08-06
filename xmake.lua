@@ -12,6 +12,8 @@ includes("src/mitsuba")
 
 includes("src")
 
+includes("data")
+
 package("xerces-c_custom")
     set_base("xerces-c")
     -- add_urls("https://github.com/apache/xerces-c.git")
@@ -64,6 +66,15 @@ function set_dependencies()
     add_packages("zlib", "openexr", "libjpeg-turbo", "libpng", "boost", "xerces-c_custom", "glew", "eigen", "fftw")
 end
 
+-- for file in os.listdir(env.GetBuildPath('#data/schema')):
+--         if fnmatch.fnmatch(file, '*.xsl') or fnmatch.fnmatch(file, '*.xsd'):
+--                 installTargets += env.Install(os.path.join(distDir, 'data/schema'), '#data/schema/' + file)
+-- for file in os.listdir(env.GetBuildPath('#data/ior')):
+--         if fnmatch.fnmatch(file, '*.spd'):
+--                 installTargets += env.Install(os.path.join(distDir, 'data/ior'), '#data/ior/' + file)
+-- for file in os.listdir(env.GetBuildPath('#data/microfacet')):
+--         if fnmatch.fnmatch(file, '*.dat'):
+--                 installTargets += env.Install(os.path.join(distDir, 'data/microfacet'), '#data/microfacet/' + file)
 
 set_common()
 set_dependencies()

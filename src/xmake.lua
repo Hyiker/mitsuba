@@ -30,4 +30,8 @@ includes("integrators")
 includes("tests")
 
 -- move plugin dlls to build directory
-set_targetdir("$(targetdir)/plugins")
+-- set_targetdir("$(targetdir)/plugins")
+on_load(function (target)
+    local old_targetdir = target:targetdir()
+    target:set("targetdir", path.join(old_targetdir, "plugins"))
+end)

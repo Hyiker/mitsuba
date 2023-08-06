@@ -10,6 +10,7 @@ target("mtsutil")
     add_files("mtsutil.cpp", winstubs, stubs)
 
 target("mitsuba")
+    add_deps("data")
     add_files("mitsuba.cpp", winstubs)
 
 target("mtssrv")
