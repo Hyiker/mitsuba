@@ -93,51 +93,45 @@
 
 #include <mitsuba/mitsuba.h>
 
-class MTS_EXPORT_CORE half
-{
-  public:
-
+class MTS_EXPORT_CORE half {
+   public:
     //-------------
     // Constructors
     //-------------
 
-    half ();            // no initialization
-    half (float f);
-
+    half();  // no initialization
+    half(float f);
 
     //--------------------
     // Conversion to float
     //--------------------
 
-    operator        float () const;
-
+    operator float() const;
 
     //------------
     // Unary minus
     //------------
 
-    half        operator - () const;
-
+    half operator-() const;
 
     //-----------
     // Assignment
     //-----------
 
-    half &      operator = (half  h);
-    half &      operator = (float f);
+    half &operator=(half h);
+    half &operator=(float f);
 
-    half &      operator += (half  h);
-    half &      operator += (float f);
+    half &operator+=(half h);
+    half &operator+=(float f);
 
-    half &      operator -= (half  h);
-    half &      operator -= (float f);
+    half &operator-=(half h);
+    half &operator-=(float f);
 
-    half &      operator *= (half  h);
-    half &      operator *= (float f);
+    half &operator*=(half h);
+    half &operator*=(float f);
 
-    half &      operator /= (half  h);
-    half &      operator /= (float f);
-
+    half &operator/=(half h);
+    half &operator/=(float f);
 
     //---------------------------------------------------------
     // Round to n-bit precision (n should be between 0 and 10).
@@ -145,8 +139,7 @@ class MTS_EXPORT_CORE half
     // bits will be zero.
     //---------------------------------------------------------
 
-    half        round (unsigned int n) const;
-
+    half round(unsigned int n) const;
 
     //--------------------------------------------------------------------
     // Classification:
@@ -169,14 +162,13 @@ class MTS_EXPORT_CORE half
     //              is set (negative)
     //--------------------------------------------------------------------
 
-    bool        isFinite () const;
-    bool        isNormalized () const;
-    bool        isDenormalized () const;
-    bool        isZero () const;
-    bool        isNan () const;
-    bool        isInfinity () const;
-    bool        isNegative () const;
-
+    bool isFinite() const;
+    bool isNormalized() const;
+    bool isDenormalized() const;
+    bool isZero() const;
+    bool isNan() const;
+    bool isInfinity() const;
+    bool isNegative() const;
 
     //--------------------------------------------
     // Special values
@@ -192,36 +184,31 @@ class MTS_EXPORT_CORE half
     //          pattern 0111110111111111
     //--------------------------------------------
 
-    static half     posInf ();
-    static half     negInf ();
-    static half     qNan ();
-    static half     sNan ();
-
+    static half posInf();
+    static half negInf();
+    static half qNan();
+    static half sNan();
 
     //--------------------------------------
     // Access to the internal representation
     //--------------------------------------
 
-    unsigned short  bits () const;
-    void        setBits (unsigned short bits);
+    unsigned short bits() const;
+    void setBits(unsigned short bits);
 
-
-  public:
-
-    union uif
-    {
-    unsigned int    i;
-    float       f;
+   public:
+    union uif {
+        unsigned int i;
+        float f;
     };
 
-  private:
+   private:
+    static short convert(int i);
+    static float overflow();
 
-    static short    convert (int i);
-    static float    overflow ();
+    unsigned short _h;
 
-    unsigned short  _h;
-
-    static uif      _toFloat[1 << 16];
+    static uif _toFloat[1 << 16];
     static unsigned short _eLut[1 << 9];
 };
 
@@ -229,19 +216,17 @@ class MTS_EXPORT_CORE half
 // Stream I/O
 //-----------
 
-MTS_EXPORT_CORE std::ostream &      operator << (std::ostream &os, half  h);
-MTS_EXPORT_CORE std::istream &      operator >> (std::istream &is, half &h);
-
+MTS_EXPORT_CORE std::ostream &operator<<(std::ostream &os, half h);
+MTS_EXPORT_CORE std::istream &operator>>(std::istream &is, half &h);
 
 //----------
 // Debugging
 //----------
 
-MTS_EXPORT_CORE void            printBits   (std::ostream &os, half  h);
-MTS_EXPORT_CORE void            printBits   (std::ostream &os, float f);
-MTS_EXPORT_CORE void            printBits   (char  c[19], half  h);
-MTS_EXPORT_CORE void            printBits   (char  c[35], float f);
-
+MTS_EXPORT_CORE void printBits(std::ostream &os, half h);
+MTS_EXPORT_CORE void printBits(std::ostream &os, float f);
+MTS_EXPORT_CORE void printBits(char c[19], half h);
+MTS_EXPORT_CORE void printBits(char c[35], float f);
 
 //-------------------------------------------------------------------------
 // Limits
@@ -253,53 +238,51 @@ MTS_EXPORT_CORE void            printBits   (char  c[35], float f);
 
 #if (defined _WIN32 || defined _WIN64) && defined _MSC_VER
 
-  #define HALF_MIN  5.96046448e-08f // Smallest positive half
+#define HALF_MIN 5.96046448e-08f  // Smallest positive half
 
-  #define HALF_NRM_MIN  6.10351562e-05f // Smallest positive normalized half
+#define HALF_NRM_MIN 6.10351562e-05f  // Smallest positive normalized half
 
-  #define HALF_MAX  65504.0f    // Largest positive half
+#define HALF_MAX 65504.0f  // Largest positive half
 
-  #define HALF_EPSILON  0.00097656f // Smallest positive e for which
-                    // half (1.0 + e) != half (1.0)
+#define HALF_EPSILON 0.00097656f  // Smallest positive e for which
+// half (1.0 + e) != half (1.0)
 #else
 
-  #define HALF_MIN  5.96046448e-08  // Smallest positive half
+#define HALF_MIN 5.96046448e-08  // Smallest positive half
 
-  #define HALF_NRM_MIN  6.10351562e-05  // Smallest positive normalized half
+#define HALF_NRM_MIN 6.10351562e-05  // Smallest positive normalized half
 
-  #define HALF_MAX  65504.0     // Largest positive half
+#define HALF_MAX 65504.0  // Largest positive half
 
-  #define HALF_EPSILON  0.00097656  // Smallest positive e for which
-                    // half (1.0 + e) != half (1.0)
+#define HALF_EPSILON 0.00097656  // Smallest positive e for which
+// half (1.0 + e) != half (1.0)
 #endif
 
+#define HALF_MANT_DIG 11  // Number of digits in mantissa
+// (significand + hidden leading 1)
 
-#define HALF_MANT_DIG   11      // Number of digits in mantissa
-                    // (significand + hidden leading 1)
+#define HALF_DIG 2  // Number of base 10 digits that
+// can be represented without change
 
-#define HALF_DIG    2       // Number of base 10 digits that
-                    // can be represented without change
+#define HALF_RADIX 2  // Base of the exponent
 
-#define HALF_RADIX  2       // Base of the exponent
+#define HALF_MIN_EXP -13  // Minimum negative integer such that
+// HALF_RADIX raised to the power of
+// one less than that integer is a
+// normalized half
 
-#define HALF_MIN_EXP    -13     // Minimum negative integer such that
-                    // HALF_RADIX raised to the power of
-                    // one less than that integer is a
-                    // normalized half
+#define HALF_MAX_EXP 16  // Maximum positive integer such that
+// HALF_RADIX raised to the power of
+// one less than that integer is a
+// normalized half
 
-#define HALF_MAX_EXP    16      // Maximum positive integer such that
-                    // HALF_RADIX raised to the power of
-                    // one less than that integer is a
-                    // normalized half
+#define HALF_MIN_10_EXP -4  // Minimum positive integer such
+// that 10 raised to that power is
+// a normalized half
 
-#define HALF_MIN_10_EXP -4      // Minimum positive integer such
-                    // that 10 raised to that power is
-                    // a normalized half
-
-#define HALF_MAX_10_EXP 4       // Maximum positive integer such
-                    // that 10 raised to that power is
-                    // a normalized half
-
+#define HALF_MAX_10_EXP 4  // Maximum positive integer such
+// that 10 raised to that power is
+// a normalized half
 
 //---------------------------------------------------------------------------
 //
@@ -412,106 +395,85 @@ MTS_EXPORT_CORE void            printBits   (char  c[35], float f);
 //
 //---------------------------------------------------------------------------
 
-
 //--------------------
 // Simple constructors
 //--------------------
 
-inline
-half::half ()
-{
+inline half::half() {
     // no initialization
 }
-
 
 //----------------------------
 // Half-from-float constructor
 //----------------------------
 
-inline
-half::half (float f)
-{
+inline half::half(float f) {
     uif x;
 
     x.f = f;
 
-    if (f == 0)
-    {
-    //
-    // Common special case - zero.
-    // Preserve the zero's sign bit.
-    //
-
-    _h = (x.i >> 16);
-    }
-    else
-    {
-    //
-    // We extract the combined sign and exponent, e, from our
-    // floating-point number, f.  Then we convert e to the sign
-    // and exponent of the half number via a table lookup.
-    //
-    // For the most common case, where a normalized half is produced,
-    // the table lookup returns a non-zero value; in this case, all
-    // we have to do is round f's significand to 10 bits and combine
-    // the result with e.
-    //
-    // For all other cases (overflow, zeroes, denormalized numbers
-    // resulting from underflow, infinities and NANs), the table
-    // lookup returns zero, and we call a longer, non-inline function
-    // to do the float-to-half conversion.
-    //
-
-    register int e = (x.i >> 23) & 0x000001ff;
-
-    e = _eLut[e];
-
-    if (e)
-    {
+    if (f == 0) {
         //
-        // Simple case - round the significand, m, to 10
-        // bits and combine it with the sign and exponent.
+        // Common special case - zero.
+        // Preserve the zero's sign bit.
         //
 
-        register int m = x.i & 0x007fffff;
-        _h = e + ((m + 0x00000fff + ((m >> 13) & 1)) >> 13);
-    }
-    else
-    {
+        _h = (x.i >> 16);
+    } else {
         //
-        // Difficult case - call a function.
+        // We extract the combined sign and exponent, e, from our
+        // floating-point number, f.  Then we convert e to the sign
+        // and exponent of the half number via a table lookup.
+        //
+        // For the most common case, where a normalized half is produced,
+        // the table lookup returns a non-zero value; in this case, all
+        // we have to do is round f's significand to 10 bits and combine
+        // the result with e.
+        //
+        // For all other cases (overflow, zeroes, denormalized numbers
+        // resulting from underflow, infinities and NANs), the table
+        // lookup returns zero, and we call a longer, non-inline function
+        // to do the float-to-half conversion.
         //
 
-        _h = convert (x.i);
-    }
+        int e = (x.i >> 23) & 0x000001ff;
+
+        e = _eLut[e];
+
+        if (e) {
+            //
+            // Simple case - round the significand, m, to 10
+            // bits and combine it with the sign and exponent.
+            //
+
+            int m = x.i & 0x007fffff;
+            _h = e + ((m + 0x00000fff + ((m >> 13) & 1)) >> 13);
+        } else {
+            //
+            // Difficult case - call a function.
+            //
+
+            _h = convert(x.i);
+        }
     }
 }
-
 
 //------------------------------------------
 // Half-to-float conversion via table lookup
 //------------------------------------------
 
-inline
-half::operator float () const
-{
-    return _toFloat[_h].f;
-}
-
+inline half::operator float() const { return _toFloat[_h].f; }
 
 //-------------------------
 // Round to n-bit precision
 //-------------------------
 
-inline half
-half::round (unsigned int n) const
-{
+inline half half::round(unsigned int n) const {
     //
     // Parameter check.
     //
 
-    if (n >= 10)
-    return *this;
+    if (n >= 10) return *this;
 
     //
     // Disassemble h into the sign, s,
@@ -529,22 +491,21 @@ half::round (unsigned int n) const
     //
 
     e >>= 9 - n;
-    e  += e & 1;
+    e += e & 1;
     e <<= 9 - n;
 
     //
     // Check for exponent overflow.
     //
 
-    if (e >= 0x7c00)
-    {
-    //
-    // Overflow occurred -- truncate instead of rounding.
-    //
+    if (e >= 0x7c00) {
+        //
+        // Overflow occurred -- truncate instead of rounding.
+        //
 
-    e = _h;
-    e >>= 10 - n;
-    e <<= 10 - n;
+        e = _h;
+        e >>= 10 - n;
+        e <<= 10 - n;
     }
 
     //
@@ -557,217 +518,135 @@ half::round (unsigned int n) const
     return h;
 }
 
-
 //-----------------------
 // Other inline functions
 //-----------------------
 
-inline half
-half::operator - () const
-{
+inline half half::operator-() const {
     half h;
     h._h = _h ^ 0x8000;
     return h;
 }
 
-
-inline half &
-half::operator = (half h)
-{
+inline half &half::operator=(half h) {
     _h = h._h;
     return *this;
 }
 
-
-inline half &
-half::operator = (float f)
-{
-    *this = half (f);
+inline half &half::operator=(float f) {
+    *this = half(f);
     return *this;
 }
 
-
-inline half &
-half::operator += (half h)
-{
-    *this = half (float (*this) + float (h));
+inline half &half::operator+=(half h) {
+    *this = half(float(*this) + float(h));
     return *this;
 }
 
-
-inline half &
-half::operator += (float f)
-{
-    *this = half (float (*this) + f);
+inline half &half::operator+=(float f) {
+    *this = half(float(*this) + f);
     return *this;
 }
 
-
-inline half &
-half::operator -= (half h)
-{
-    *this = half (float (*this) - float (h));
+inline half &half::operator-=(half h) {
+    *this = half(float(*this) - float(h));
     return *this;
 }
 
-
-inline half &
-half::operator -= (float f)
-{
-    *this = half (float (*this) - f);
+inline half &half::operator-=(float f) {
+    *this = half(float(*this) - f);
     return *this;
 }
 
-
-inline half &
-half::operator *= (half h)
-{
-    *this = half (float (*this) * float (h));
+inline half &half::operator*=(half h) {
+    *this = half(float(*this) * float(h));
     return *this;
 }
 
-
-inline half &
-half::operator *= (float f)
-{
-    *this = half (float (*this) * f);
+inline half &half::operator*=(float f) {
+    *this = half(float(*this) * f);
     return *this;
 }
 
-
-inline half &
-half::operator /= (half h)
-{
-    *this = half (float (*this) / float (h));
+inline half &half::operator/=(half h) {
+    *this = half(float(*this) / float(h));
     return *this;
 }
 
-
-inline half &
-half::operator /= (float f)
-{
-    *this = half (float (*this) / f);
+inline half &half::operator/=(float f) {
+    *this = half(float(*this) / f);
     return *this;
 }
 
-
-inline bool
-half::isFinite () const
-{
+inline bool half::isFinite() const {
     unsigned short e = (_h >> 10) & 0x001f;
     return e < 31;
 }
 
-
-inline bool
-half::isNormalized () const
-{
+inline bool half::isNormalized() const {
     unsigned short e = (_h >> 10) & 0x001f;
     return e > 0 && e < 31;
 }
 
-
-inline bool
-half::isDenormalized () const
-{
+inline bool half::isDenormalized() const {
     unsigned short e = (_h >> 10) & 0x001f;
-    unsigned short m =  _h & 0x3ff;
+    unsigned short m = _h & 0x3ff;
     return e == 0 && m != 0;
 }
 
+inline bool half::isZero() const { return (_h & 0x7fff) == 0; }
 
-inline bool
-half::isZero () const
-{
-    return (_h & 0x7fff) == 0;
-}
-
-
-inline bool
-half::isNan () const
-{
+inline bool half::isNan() const {
     unsigned short e = (_h >> 10) & 0x001f;
-    unsigned short m =  _h & 0x3ff;
+    unsigned short m = _h & 0x3ff;
     return e == 31 && m != 0;
 }
 
-
-inline bool
-half::isInfinity () const
-{
+inline bool half::isInfinity() const {
     unsigned short e = (_h >> 10) & 0x001f;
-    unsigned short m =  _h & 0x3ff;
+    unsigned short m = _h & 0x3ff;
     return e == 31 && m == 0;
 }
 
+inline bool half::isNegative() const { return (_h & 0x8000) != 0; }
 
-inline bool
-half::isNegative () const
-{
-    return (_h & 0x8000) != 0;
-}
-
-
-inline half
-half::posInf ()
-{
+inline half half::posInf() {
     half h;
     h._h = 0x7c00;
     return h;
 }
 
-
-inline half
-half::negInf ()
-{
+inline half half::negInf() {
     half h;
     h._h = 0xfc00;
     return h;
 }
 
-
-inline half
-half::qNan ()
-{
+inline half half::qNan() {
     half h;
     h._h = 0x7fff;
     return h;
 }
 
-
-inline half
-half::sNan ()
-{
+inline half half::sNan() {
     half h;
     h._h = 0x7dff;
     return h;
 }
 
+inline unsigned short half::bits() const { return _h; }
 
-inline unsigned short
-half::bits () const
-{
-    return _h;
-}
-
-
-inline void
-half::setBits (unsigned short bits)
-{
-    _h = bits;
-}
+inline void half::setBits(unsigned short bits) { _h = bits; }
 
 namespace std {
 
 template <>
-class numeric_limits <half>
-{
-  public:
-
+class numeric_limits<half> {
+   public:
     static const bool is_specialized = true;
 
-    static half min () throw () {return HALF_NRM_MIN;}
-    static half max () throw () {return HALF_MAX;}
+    static half min() throw() { return HALF_NRM_MIN; }
+    static half max() throw() { return HALF_MAX; }
 
     static const int digits = HALF_MANT_DIG;
     static const int digits10 = HALF_DIG;
@@ -775,8 +654,8 @@ class numeric_limits <half>
     static const bool is_integer = false;
     static const bool is_exact = false;
     static const int radix = HALF_RADIX;
-    static half epsilon () throw () {return HALF_EPSILON;}
-    static half round_error () throw () {return HALF_EPSILON / 2;}
+    static half epsilon() throw() { return HALF_EPSILON; }
+    static half round_error() throw() { return HALF_EPSILON / 2; }
 
     static const int min_exponent = HALF_MIN_EXP;
     static const int min_exponent10 = HALF_MIN_10_EXP;
@@ -788,10 +667,10 @@ class numeric_limits <half>
     static const bool has_signaling_NaN = true;
     static const float_denorm_style has_denorm = denorm_present;
     static const bool has_denorm_loss = false;
-    static half infinity () throw () {return half::posInf();}
-    static half quiet_NaN () throw () {return half::qNan();}
-    static half signaling_NaN () throw () {return half::sNan();}
-    static half denorm_min () throw () {return HALF_MIN;}
+    static half infinity() throw() { return half::posInf(); }
+    static half quiet_NaN() throw() { return half::qNan(); }
+    static half signaling_NaN() throw() { return half::sNan(); }
+    static half denorm_min() throw() { return HALF_MIN; }
 
     static const bool is_iec559 = false;
     static const bool is_bounded = false;
@@ -802,7 +681,7 @@ class numeric_limits <half>
     static const float_round_style round_style = round_to_nearest;
 };
 
-} // namespace std
+}  // namespace std
 
 #endif
 #endif

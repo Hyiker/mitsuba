@@ -18,25 +18,28 @@
 
 #include <mitsuba/core/platform.h>
 
-// Mitsuba's "Assert" macro conflicts with Xerces' XSerializeEngine::Assert(...).
-// This becomes a problem when using a PCH which contains mitsuba/core/logger.h
+// Mitsuba's "Assert" macro conflicts with Xerces'
+// XSerializeEngine::Assert(...). This becomes a problem when using a PCH which
+// contains mitsuba/core/logger.h
+
+#include <mitsuba/core/fresolver.h>
+#include <mitsuba/render/scenehandler.h>
+#include <mitsuba/render/util.h>
+
 #if defined(Assert)
-# undef Assert
+#undef Assert
 #endif
 #include <xercesc/parsers/SAXParser.hpp>
-#include <mitsuba/core/fresolver.h>
-#include <mitsuba/render/util.h>
-#include <mitsuba/render/scenehandler.h>
 
 MTS_NAMESPACE_BEGIN
 
 ref<Scene> Utility::loadScene(const fs::path &filename,
-        const ParameterMap &params) {
+                              const ParameterMap &params) {
     return SceneHandler::loadScene(filename, params);
 }
 
 ref<Scene> Utility::loadSceneFromString(const std::string &content,
-        const ParameterMap &params) {
+                                        const ParameterMap &params) {
     return SceneHandler::loadSceneFromString(content, params);
 }
 

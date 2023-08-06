@@ -22,10 +22,10 @@
 
 #include <mitsuba/hw/renderer.h>
 
-struct GLEWContextStruct;
+// struct GLEWContextStruct;
 
 /// Get the per-thread context for GLEW-MX
-extern MTS_EXPORT_HW GLEWContextStruct *glewGetContext();
+// extern MTS_EXPORT_HW GLEWContextStruct *glewGetContext();
 
 MTS_NAMESPACE_BEGIN
 
@@ -41,7 +41,7 @@ MTS_NAMESPACE_BEGIN
  * \ingroup libhw
  */
 class MTS_EXPORT_HW GLRenderer : public Renderer {
-public:
+   public:
     /// Construct a new OpenGL rendering interface
     GLRenderer(Session *session);
 
@@ -59,7 +59,7 @@ public:
 
     /// Create a new GPU texture object
     GPUTexture *createGPUTexture(const std::string &name,
-        Bitmap *bitmap = NULL);
+                                 Bitmap *bitmap = NULL);
 
     /// Create a new GPU geometry object
     GPUGeometry *createGPUGeometry(const Shape *shape);
@@ -75,9 +75,9 @@ public:
 
     /// Configure the camera
     void setCamera(const ProjectiveCamera *pCamera,
-        const Point2 &apertureSample = Point2(0.5f),
-        const Point2 &aaSample = Point2(0.5f),
-        Float timeSample = 0.5f);
+                   const Point2 &apertureSample = Point2(0.5f),
+                   const Point2 &aaSample = Point2(0.5f),
+                   Float timeSample = 0.5f);
 
     /// Configure the camera (manual)
     void setCamera(const Matrix4x4 &proj, const Matrix4x4 &view);
@@ -110,10 +110,9 @@ public:
     void drawAll(const std::vector<TransformedGPUGeometry> &allGeometry);
 
     /// Draw a quad using the given texture
-    void blitTexture(const GPUTexture *texture,
-        bool flipVertically = false,
-        bool centerHoriz = true, bool centerVert = true,
-        const Vector2i &offset = Vector2i(0, 0));
+    void blitTexture(const GPUTexture *texture, bool flipVertically = false,
+                     bool centerHoriz = true, bool centerVert = true,
+                     const Vector2i &offset = Vector2i(0, 0));
 
     /// Blit a screen-sized quad
     void blitQuad(bool flipVertically);
@@ -122,8 +121,8 @@ public:
      * Draw a line of text on the screen. The coordinates are specified
      * in pixel coordinates, where the upper left corner is the origin
      */
-    void drawText(const Point2i &pos,
-            const Font *font, const std::string &text);
+    void drawText(const Point2i &pos, const Font *font,
+                  const std::string &text);
 
     /// Set the size of point primitives
     void setPointSize(Float size);
@@ -155,12 +154,13 @@ public:
     /// Draw a filled rectangle between two specified points (2D)
     void drawFilledRectangle(const Point2 &a, const Point2 &b);
 
-    /// Draw a filled rectangle between two specified points (2D, integer coordinates)
+    /// Draw a filled rectangle between two specified points (2D, integer
+    /// coordinates)
     void drawFilledRectangle(const Point2i &a, const Point2i &b);
 
     /// Draw an ellipse with the specified center and axes
-    void drawEllipse(const Point &center,
-            const Vector &axis1, const Vector &axis2);
+    void drawEllipse(const Point &center, const Vector &axis1,
+                     const Vector &axis2);
 
     /// Draw a wire-frame axis-aligned box
     void drawAABB(const AABB &aabb);
@@ -210,10 +210,11 @@ public:
     void debugString(const std::string &text);
 
     MTS_DECLARE_CLASS()
-protected:
+   protected:
     /// Virtual destructor
     virtual ~GLRenderer();
-protected:
+
+   protected:
     bool m_transmitOnlyPositions;
     bool m_normalsEnabled;
     bool m_texcoordsEnabled;
