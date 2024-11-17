@@ -1,5 +1,4 @@
 add_deps("mitsuba-render", "mitsuba-core", "mitsuba-hw")
-set_kind("shared")
 -- plugins += env.SharedLibrary('ao', ['direct/ao.cpp'])
 -- plugins += env.SharedLibrary('direct', ['direct/direct.cpp'])
 -- plugins += env.SharedLibrary('path', ['path/path.cpp'])
@@ -19,49 +18,49 @@ set_kind("shared")
 -- plugins += env.SharedLibrary('multichannel', ['misc/multichannel.cpp'])
 -- plugins += env.SharedLibrary('field', ['misc/field.cpp'])
 -- plugins += env.SharedLibrary('motion', ['misc/motion.cpp'])
-target("ao")
+mtb_plugin_target("ao")
     add_files("direct/ao.cpp")
 
-target("direct")
+mtb_plugin_target("direct")
     add_files("direct/direct.cpp")
 
-target("path")
+mtb_plugin_target("path")
     add_files("path/path.cpp")
 
-target("volpath")
+mtb_plugin_target("volpath")
     add_files("path/volpath.cpp")
 
-target("volpath_simple")
+mtb_plugin_target("volpath_simple")
     add_files("path/volpath_simple.cpp")
 
-target("ptracer")
+mtb_plugin_target("ptracer")
     add_files("ptracer/ptracer.cpp", "ptracer/ptracer_proc.cpp")
 
-target("photonmapper")
+mtb_plugin_target("photonmapper")
     add_files("photonmapper/photonmapper.cpp", "photonmapper/bre.cpp")
 
-target("ppm")
+mtb_plugin_target("ppm")
     add_files("photonmapper/ppm.cpp")
 
-target("sppm")
+mtb_plugin_target("sppm")
     add_files("photonmapper/sppm.cpp")
 
-target("vpl")
+mtb_plugin_target("vpl")
     add_files("vpl/vpl.cpp")
 
-target("adaptive")
+mtb_plugin_target("adaptive")
     add_files("misc/adaptive.cpp")
 
-target("irrcache")  
+mtb_plugin_target("irrcache")  
     add_files("misc/irrcache.cpp", "misc/irrcache_proc.cpp")
 
-target("multichannel")
+mtb_plugin_target("multichannel")
     add_files("misc/multichannel.cpp")
 
-target("field")
+mtb_plugin_target("field")
     add_files("misc/field.cpp")
 
-target("motion")
+mtb_plugin_target("motion")
     add_files("misc/motion.cpp")
 
 -- bidirEnv = env.Clone()
@@ -84,18 +83,18 @@ target("motion")
 -- )
 
 
-target("bdpt")
+mtb_plugin_target("bdpt")
     add_deps("mitsuba-bidir")
     add_files("bdpt/bdpt.cpp", "bdpt/bdpt_wr.cpp", "bdpt/bdpt_proc.cpp")
 
-target("pssmlt")
+mtb_plugin_target("pssmlt")
     add_deps("mitsuba-bidir")
     add_files("pssmlt/pssmlt.cpp", "pssmlt/pssmlt_sampler.cpp", "pssmlt/pssmlt_proc.cpp")
 
-target("mlt")
+mtb_plugin_target("mlt")
     add_deps("mitsuba-bidir")
     add_files("mlt/mlt.cpp", "mlt/mlt_proc.cpp")
 
-target("erpt")
+mtb_plugin_target("erpt")
     add_deps("mitsuba-bidir")
     add_files("erpt/erpt.cpp", "erpt/erpt_proc.cpp")

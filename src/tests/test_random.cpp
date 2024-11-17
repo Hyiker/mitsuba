@@ -81,7 +81,7 @@ private:
     // Functor which returns true if applying "and" with the given mask
     // to the value is non-zero.
     template <typename T>
-    struct nonzero_and : public std::unary_function<T, bool>
+    struct nonzero_and
     {
         const T mask;
 
@@ -96,7 +96,7 @@ private:
 
     // Functor which returns true is the element is different than zero
     template <typename T>
-    struct is_nonzero : public std::unary_function<T, bool>
+    struct is_nonzero
     {
         bool operator() (const T & v) const {
             return v != 0;

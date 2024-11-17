@@ -149,7 +149,7 @@ public:
     }
 
 protected:
-    struct LabelOrdering : public std::binary_function<uint32_t, uint32_t, bool> {
+    struct LabelOrdering {
         LabelOrdering(const std::vector<Item> &items) : m_items(items) { }
 
         inline bool operator()(uint32_t a, uint32_t b) const {

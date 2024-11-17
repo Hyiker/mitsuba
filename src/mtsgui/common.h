@@ -151,7 +151,7 @@ struct VisualWorkUnit {
         : offset(offset), size(size), worker(worker) { }
 };
 
-struct block_comparator : std::binary_function<VisualWorkUnit, VisualWorkUnit, bool> {
+struct block_comparator {
     static int compare(const VisualWorkUnit &v1, const VisualWorkUnit &v2) {
         if (v1.offset.x < v2.offset.x) return -1;
         else if (v1.offset.x > v2.offset.x) return 1;

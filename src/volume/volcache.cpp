@@ -31,7 +31,7 @@ static StatsCounter statsDestruct("Volume cache", "Block destructions");
 static StatsCounter statsEmpty("Volume cache", "Empty blocks", EPercentage);
 
 /* Lexicographic ordering for Vector3i */
-struct Vector3iKeyOrder : public std::binary_function<Vector3i, Vector3i, bool> {
+struct Vector3iKeyOrder {
     inline bool operator()(const Vector3i &v1, const Vector3i &v2) const {
         if (v1.x < v2.x) return true;
         else if (v1.x > v2.x) return false;

@@ -228,23 +228,6 @@ typedef long ssize_t;
 #endif
 };  // namespace mitsuba
 
-namespace std {
-inline char tolower(char c) { return ::tolower(c); }
-
-inline char toupper(char c) { return ::toupper(c); }
-
-inline bool isnan(float f) { return _isnan(f); }
-
-inline bool isnan(double f) { return _isnan(f); }
-
-inline bool isfinite(float f) { return _finite(f); }
-
-inline bool isfinite(double f) { return _finite(f); }
-
-inline bool isinf(float f) { return !_finite(f); }
-
-inline bool isinf(double f) { return !_finite(f); }
-};  // namespace std
 #endif
 /// \endcond
 

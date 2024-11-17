@@ -1,4 +1,4 @@
-target("mitsuba-core")
+mtb_target("mitsuba-core")
     set_kind("shared")
     add_files("*.cpp")
 

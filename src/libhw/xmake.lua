@@ -1,4 +1,4 @@
-target("mitsuba-hw")
+mtb_target("mitsuba-hw")
     set_kind("shared")
     add_files("session.cpp", "device.cpp", "gputexture.cpp", "gpugeometry.cpp",
         "gpuprogram.cpp", "renderer.cpp", "glrenderer.cpp", "glprogram.cpp",

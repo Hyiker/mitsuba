@@ -17,11 +17,10 @@ add_deps("mitsuba-render", "mitsuba-core", "mitsuba-hw")
 --                 lib = lib[0]
 --         plugins += [ lib ]
 
-add_defines("MTS_TESTCASE=1")
-set_kind("shared")
 
 for _, fi in ipairs(os.files("test_*.cpp")) do
-    target(path.basename(fi))
+    mtb_plugin_target(path.basename(fi))
+        add_defines("MTS_TESTCASE=1")
         add_files(fi)
         if fi:find("bidir") then
             add_deps("mitsuba-bidir")

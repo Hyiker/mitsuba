@@ -12,11 +12,9 @@ add_deps("mitsuba-render", "mitsuba-core", "mitsuba-hw")
 -- plugins += env.SharedLibrary('spot', ['spot.cpp'])
 for _, fi in ipairs({"area.cpp", "collimated.cpp", "directional.cpp", "point.cpp",
  "constant.cpp", "envmap.cpp", "sun.cpp", "sunsky.cpp", "spot.cpp"}) do
-    target(path.basename(fi))
-        set_kind("shared")
+    mtb_plugin_target(path.basename(fi))
         add_files(fi)
 end
 
-target("sky")
-    set_kind("shared")
+mtb_plugin_target("sky")
     add_files("sky.cpp", "sunsky/skymodel.cpp")

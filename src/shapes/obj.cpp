@@ -581,8 +581,7 @@ public:
     };
 
     /// For using vertices as keys in an associative structure
-    struct vertex_key_order : public
-        std::binary_function<Vertex, Vertex, bool> {
+    struct vertex_key_order {
     public:
         bool operator()(const Vertex &v1, const Vertex &v2) const {
             if (v1.p.x < v2.p.x) return true;

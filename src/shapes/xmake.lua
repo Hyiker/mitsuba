@@ -17,12 +17,10 @@ add_deps("mitsuba-render", "mitsuba-core", "mitsuba-hw")
 for _, fi in ipairs({"obj.cpp", "serialized.cpp", "rectangle.cpp", "disk.cpp",
  "sphere.cpp", "cylinder.cpp", "hair.cpp", "shapegroup.cpp", "instance.cpp",
   "cube.cpp", "heightfield.cpp"}) do
-    target(path.basename(fi))
-        set_kind("shared")
+    mtb_plugin_target(path.basename(fi))
         add_files(fi)
 end
 
-target("ply")
-    set_kind("shared")
+mtb_plugin_target("ply")
     add_files("ply.cpp", "ply/ply_parser.cpp")
     add_includedirs(".")
