@@ -1,0 +1,26 @@
+---
+Language:        Cpp
+BasedOnStyle:    LLVM
+IndentWidth:     4
+TabWidth:        4
+UseTab:          Never
+BreakBeforeBraces: Attach
+BraceWrapping:
+  AfterClass:      false
+  AfterControlStatement: false
+  AfterFunction:   false
+  AfterNamespace:  false
+  BeforeCatch:     false
+  BeforeElse:      false
+  IndentBraces:    false
+IndentAccessModifiers: false
+AllowShortFunctionsOnASingleLine: None
+PointerAlignment: Left
+SpaceBeforeParens: ControlStatements
+SpacesInParentheses: false
+SpacesInAngles:  false
+SpaceAfterCStyleCast: false
+SpaceInEmptyParentheses: false
+AllowShortBlocksOnASingleLine: false
+ColumnLimit:     80
+...
